@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='/c/Users/lior.schindler/loopback-passport/loopback-component-passport'
+let g:netrw_dirhist_2='/c/Users/lior.schindler/loopback-passport/loopback-component-passport/lib'
+let g:netrw_dirhist_3='/home/lior/dev/refapp/node_modules/nodered-contrib-ev-xml-json'
+let g:netrw_dirhist_4='/home/lior/ev/ev-foundation/tools'
+let g:netrw_dirhist_5='/home/lior/ev/ev-foundation'
+let g:netrw_dirhist_6='/home/lior/ev/ev-foundation/node_modules/loopback-datasource-juggler'
+let g:netrw_dirhist_7='/home/lior/ev/ev-foundation/node_modules/loopback-datasource-juggler/lib'
