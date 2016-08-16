@@ -54,12 +54,12 @@ Plug 'mileszs/ack.vim'
 Plug 'digitaltoad/vim-pug', {'for': 'jade'}
 Plug 'ternjs/tern_for_vim', {'for': 'javascript'}
 Plug 'airblade/vim-gitgutter'
-Plug 'tomasr/molokai'
 Plug 'morhetz/gruvbox'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdcommenter'
+Plug 'Valloric/YouCompleteMe'
 call plug#end()
 
 
