@@ -1,2 +1,2 @@
 alias c='clear'
-alias config='/usr/bin/git --git-dir=/home/lior/.cfg/ --work-tree=/home/lior'
+alias config='git --git-dir=/home/lior/.cfg/ --work-tree=/home/lior'
