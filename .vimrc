@@ -40,15 +40,21 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " download and install vim-plug
 if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall | source $MYVIMRC
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall | source $MYVIMRC
 endif
 "Plug conifg
 call plug#begin('~/.vim/plugged')
-Plug 'scrooloose/syntastic'
+if v:version >= 800
+    Plug 'neomake/neomake'
+else
+    echo v:version
+    Plug 'scrooloose/syntastic'
+endif
 Plug 'crusoexia/vim-monokai'
 Plug 'pangloss/vim-javascript', {'for': 'javascript'}
+Plug 'moll/vim-node', {'for': 'javascript'}
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'MarcWeber/vim-addon-local-vimrc'
 Plug 'tpope/vim-surround'
@@ -60,12 +66,15 @@ Plug 'digitaltoad/vim-pug', {'for': 'jade'}
 Plug 'airblade/vim-gitgutter'
 Plug 'morhetz/gruvbox'
 Plug 'nathanaelkane/vim-indent-guides'
-"Plug 'ctrlpvim/ctrlp.vim'
+if has("win32") || has("win32unix")
+    Plug 'ctrlpvim/ctrlp.vim'
+else
+    Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all'}
+endif
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdcommenter'
 Plug 'Valloric/YouCompleteMe'
 Plug 'docker/docker', {'rtp': '/contrib/syntax/vim/'} 
-Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all'}
 call plug#end()
 
 
@@ -295,8 +304,8 @@ map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " Specify the behavior when switching between buffers 
 try
-  set switchbuf=useopen,usetab,newtab
-  set stal=2
+    set switchbuf=useopen,usetab,newtab
+    set stal=2
 catch
 endtry
 
@@ -328,17 +337,17 @@ vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 if has("mac") || has("macunix")
-  nmap <D-j> <M-j>
-  nmap <D-k> <M-k>
-  vmap <D-j> <M-j>
-  vmap <D-k> <M-k>
+    nmap <D-j> <M-j>
+    nmap <D-k> <M-k>
+    vmap <D-j> <M-j>
+    vmap <D-k> <M-k>
 endif
 
 " Delete trailing white space on save, useful for Python and CoffeeScript ;)
 func! DeleteTrailingWS()
-  exe "normal mz"
-  %s/\s\+$//ge
-  exe "normal `z"
+    exe "normal mz"
+    %s/\s\+$//ge
+    exe "normal `z"
 endfunc
 autocmd BufWrite *.py :call DeleteTrailingWS()
 autocmd BufWrite *.js :call DeleteTrailingWS()
@@ -451,22 +460,22 @@ endfunction
 " Don't close window, when deleting a buffer
 command! Bclose call <SID>BufcloseCloseIt()
 function! <SID>BufcloseCloseIt()
-   let l:currentBufNum = bufnr("%")
-   let l:alternateBufNum = bufnr("#")
+    let l:currentBufNum = bufnr("%")
+    let l:alternateBufNum = bufnr("#")
 
-   if buflisted(l:alternateBufNum)
-     buffer #
-   else
-     bnext
-   endif
+    if buflisted(l:alternateBufNum)
+        buffer #
+    else
+        bnext
+    endif
 
-   if bufnr("%") == l:currentBufNum
-     new
-   endif
+    if bufnr("%") == l:currentBufNum
+        new
+    endif
 
-   if buflisted(l:currentBufNum)
-     execute("bdelete! ".l:currentBufNum)
-   endif
+    if buflisted(l:currentBufNum)
+        execute("bdelete! ".l:currentBufNum)
+    endif
 endfunction
 
 " Make VIM remember position in file after reopen
@@ -474,25 +483,43 @@ endfunction
 "   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 "endif
 
-" syntastic settins
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 1
-if has("win32") || has("win32unix")
-    let g:syntastic_check_on_open = 0
+"Neomake settings
+if v:version >= 800
+    let g:neomake_javascript_jshint_maker = {
+                \ 'exe': 'jshint',
+                \ 'args': ['--verbose'],
+                \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
+                \ }
+    let g:neomake_javascript_jscs_maker = {
+                \ 'exe': 'jscs',
+                \ 'args': ['--verbose'],
+                \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
+                \ }
+    let g:neomake_javascript_enabled_makers = ['jshint', 'jscs']
+    let g:neomake_open_list = 1
+    autocmd! BufWritePost * Neomake
+else
+    " syntastic settins
+    set statusline+=%#warningmsg#
+    set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%*
+    let g:syntastic_always_populate_loc_list = 1
+    let g:syntastic_auto_loc_list = 1
+    let g:syntastic_check_on_open = 1
+    let g:syntastic_check_on_wq = 1
+    if has("win32") || has("win32unix")
+        let g:syntastic_check_on_open = 0
+    endif
 endif
 
 " NERD commenter settings
 let g:NERDCustomDelimiters = { 'javascript': {'left': '/**', 'right': '*/'} }
 let g:NERDSpaceDelims = 1
 
-" ctrlp configuration
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+if has("win32") || has("win32unix")
+else
+    " FZF shortcut
+    map <C-p> :FZF<cr>
+endif
 " git-gutter configuration
 let g:gitgutter_grep_command = 'ag --nocolor'
-" FZF shortcut
-map <C-p> :FZF<cr>

@@ -55,3 +55,5 @@ fi
 source ~/.vim/plugged/gruvbox/gruvbox_256palette.sh
 # completion from cache
 zstyle ':completion:*' use-cache yes
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh && export FZF_DEFAULT_COMMAND='ag -g ""'
