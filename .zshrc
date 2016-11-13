@@ -50,8 +50,16 @@ export SSH_KEY_PATH="~/.ssh/dsa_id"
 # dircolors
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
 fi
 # apply gruvbox color palette TODO: check -f and 256 color support
 source ~/.vim/plugged/gruvbox/gruvbox_256palette.sh
 # completion from cache
-zstyle ':completion:*' use-cache yes
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}  use-cache yes
+
+# fzf shortcuts
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
