@@ -38,7 +38,12 @@
 "    -> Helper functions
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
+" download and install vim-plug
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall | source $MYVIMRC
+endif
 "Plug conifg
 call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/syntastic'
@@ -52,14 +57,15 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'mileszs/ack.vim'
 Plug 'digitaltoad/vim-pug', {'for': 'jade'}
-Plug 'ternjs/tern_for_vim', {'for': 'javascript'}
 Plug 'airblade/vim-gitgutter'
 Plug 'morhetz/gruvbox'
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'ctrlpvim/ctrlp.vim'
+"Plug 'ctrlpvim/ctrlp.vim'
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdcommenter'
 Plug 'Valloric/YouCompleteMe'
+Plug 'docker/docker', {'rtp': '/contrib/syntax/vim/'} 
+Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all'}
 call plug#end()
 
 
@@ -480,11 +486,13 @@ if has("win32") || has("win32unix")
     let g:syntastic_check_on_open = 0
 endif
 
-"tern key maps
-let g:tern_map_keys=1
 " NERD commenter settings
 let g:NERDCustomDelimiters = { 'javascript': {'left': '/**', 'right': '*/'} }
 let g:NERDSpaceDelims = 1
 
-"ctrlp
+" ctrlp configuration
 let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+" git-gutter configuration
+let g:gitgutter_grep_command = 'ag --nocolor'
+" FZF shortcut
+map <C-p> :FZF<cr>
