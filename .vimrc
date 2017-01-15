@@ -49,7 +49,6 @@ call plug#begin('~/.vim/plugged')
 if v:version >= 800
     Plug 'neomake/neomake'
 else
-    echo v:version
     Plug 'scrooloose/syntastic'
 endif
 Plug 'crusoexia/vim-monokai'
@@ -68,12 +67,13 @@ Plug 'morhetz/gruvbox'
 Plug 'nathanaelkane/vim-indent-guides'
 if has("win32") || has("win32unix")
     Plug 'ctrlpvim/ctrlp.vim'
+    Plug 'Shougo/neocomplete.vim'
 else
     Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all'}
+    Plug 'Valloric/YouCompleteMe'
 endif
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdcommenter'
-Plug 'Valloric/YouCompleteMe'
 Plug 'docker/docker', {'rtp': '/contrib/syntax/vim/'} 
 call plug#end()
 
@@ -490,11 +490,6 @@ if v:version >= 800
                 \ 'args': ['--verbose'],
                 \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
                 \ }
-    let g:neomake_javascript_jscs_maker = {
-                \ 'exe': 'jscs',
-                \ 'args': ['--verbose'],
-                \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
-                \ }
     let g:neomake_javascript_enabled_makers = ['jshint', 'jscs']
     let g:neomake_open_list = 1
     autocmd! BufWritePost * Neomake
@@ -507,9 +502,6 @@ else
     let g:syntastic_auto_loc_list = 1
     let g:syntastic_check_on_open = 1
     let g:syntastic_check_on_wq = 1
-    if has("win32") || has("win32unix")
-        let g:syntastic_check_on_open = 0
-    endif
 endif
 
 " NERD commenter settings
@@ -517,9 +509,12 @@ let g:NERDCustomDelimiters = { 'javascript': {'left': '/**', 'right': '*/'} }
 let g:NERDSpaceDelims = 1
 
 if has("win32") || has("win32unix")
+    let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files'] 
+    let g:neocomplete#enable_at_startup = 1
+    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 else
     " FZF shortcut
     map <C-p> :FZF<cr>
+    " git-gutter configuration
+    let g:gitgutter_grep_command = 'ag --nocolor'
 endif
-" git-gutter configuration
-let g:gitgutter_grep_command = 'ag --nocolor'
