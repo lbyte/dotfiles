@@ -47,7 +47,7 @@ endif
 "Plug conifg
 call plug#begin('~/.vim/plugged')
 if v:version >= 800
-    Plug 'neomake/neomake'
+    Plug 'w0rp/ale'
 else
     Plug 'scrooloose/syntastic'
 endif
@@ -74,7 +74,7 @@ else
 endif
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdcommenter'
-Plug 'docker/docker', {'rtp': '/contrib/syntax/vim/'} 
+Plug 'ekalinin/Dockerfile.vim'
 call plug#end()
 
 
